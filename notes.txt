@@ -1,0 +1,13 @@
+raspivid captures video
+sends ffmpeg to create 4 second segments
+listener listening to the directory for additions and updates
+when add: add to db as new file, not ready for upload
+when modified, update db record to say ready to upload
+(something) uploads file (somewhere)
+on successful upload, marks db record as complete
+on failure, marks db record as failed
+
+raspivid -o - -t 0 -vf -hf -b 4000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f segment -segment_time 4 -segment_list test2.m3u8 -segment_format mpegts stream%05d.ts
+
+
+-strftime 1 "output%Y-%m-%d_%H-%M-%S.ts"
