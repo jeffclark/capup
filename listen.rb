@@ -1,15 +1,11 @@
 require 'listen'
 require 'sqlite3'
-
+# hi
 db = SQLite3::Database.new "test.db"
 
 listener = Listen.to('/home/pi/www/capup', only: /\.ts$/) do |modified,added,removed|
 	#only look for ts files
-	#p "======="
-	#puts "modified path: #{modified}"
-	#puts "added path: #{added}"
-	#puts "removed path: #{removed}"
-	#p "-------"
+	p "======="
 	modified = modified.to_a
 	added = added.to_a
 	removed = removed.to_a
@@ -19,6 +15,9 @@ listener = Listen.to('/home/pi/www/capup', only: /\.ts$/) do |modified,added,rem
 		db.execute("INSERT INTO upload_queue (segment_path, status)
 				VALUES (?, ?)", ["#{added[0]}", "capturing"])
 		p "  - inserted"
+		p "performing via sidekiq:"
+		PlainOldRuby.perform
+		p "performed?"
 	end
 
 	if !modified.empty?

@@ -11,3 +11,5 @@ raspivid -o - -t 0 -vf -hf -b 4000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s
 
 
 -strftime 1 "output%Y-%m-%d_%H-%M-%S.ts"
+
+need a job queue in the background that can execute uploads once the db is in a certain state: when file is ready for upload, bg job attempts to execute the upload, retries when it fails, et
